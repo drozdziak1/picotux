@@ -1,6 +1,6 @@
-[submodule "busybox"]
-	path = busybox
-	url = ./busybox
 [submodule "linux"]
 	path = linux
-	url = ./linux
+	url = git://busybox.net/busybox.git
+[submodule "busybox"]
+	path = busybox
+	url = https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
