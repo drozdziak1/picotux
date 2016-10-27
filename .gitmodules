@@ -1,0 +1,6 @@
+[submodule "busybox"]
+	path = busybox
+	url = ./busybox
+[submodule "linux"]
+	path = linux
+	url = ./linux
