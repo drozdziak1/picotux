@@ -9,31 +9,31 @@ BUSYBOX_ACTUAL_CONFIG = $(BUSYBOX_DIR)/.config
 
 objs = vmroot.img
 
-all: linux busybox vmroot.img
-
-
-linux: linux_config
-	$(MAKE) -C $(LINUX_DIR) KCONFIG_CONFIG=$(LINUX_CONFIG)
-
-
-busybox: busybox_config;
-	ifeq(,$(wildcard $(BUSYBOX_ACTUAL_CONFIG))
-		$(MAKE) -C $(BUSYBOX_DIR)
-	endif
+all: vmroot.img
+	$(LINUX_DIR)/usr/get
 
 
 linux_config:
 	$(MAKE) -C $(LINUX_DIR) KCONFIG_CONFIG=$(LINUX_CONFIG) defconfig
 
-busybox_config:
+linux: linux_config
+	$(MAKE) -C $(LINUX_DIR) KCONFIG_CONFIG=$(LINUX_CONFIG)
 
+
+busybox_config:
+	$(MAKE) -C $(BUSYBOX_DIR) defconfig
+
+busybox: busybox_config;
+	$(MAKE) -C $(BUSYBOX_DIR) KCONFIG_CONFIG=$(BUSYBOX_CONFIG)
+
+vmroot.img: linux busybox
 
 
 clean:
-	$(MAKE) -C $(LINUX_DIR) clean
-	$(MAKE) -C $(BUSYBOX_DIR) clean
+	$(MAKE) -C $(LINUX_DIR) $@
+	$(MAKE) -C $(BUSYBOX_DIR) $@
 	rm -rf $(objs)
 
 mrproper: clean
-	$(MAKE) -C $(LINUX_DIR) mrproper
-	$(MAKE) -C $(BUSYBOX_DIR) mrproper
+	$(MAKE) -C $(LINUX_DIR) $@
+	$(MAKE) -C $(BUSYBOX_DIR) $@
