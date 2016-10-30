@@ -1,0 +1,14 @@
+# type		dest		src		perm	usr	grp
+
+# dirs
+dir		/bin				775	0	0
+
+# files
+file		/init		init.sh		775	0	0
+file		/busybox	busybox		775	0	0
+
+# symlinks
+slink		/bin/sh		/busybox	775	0	0
+
+# devnodes
+nod		/dev/zero			666	0	0	c 1 5

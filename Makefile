@@ -1,16 +1,17 @@
 LINUX_DIR = linux
-LINUX_CONFIG = linux_config
+LINUX_CONFIG = $(PWD)/linux_config
 
-BUSYBOX_DIR = busybox
-BUSYBOX_CONFIG = busybox_config
-BUSYBOX_ACTUAL_CONFIG = $(BUSYBOX_DIR)/.config
+BUSYBOX_DIR = $(PWD)/busybox
+# No variable in BusyBox to make this prettier unfortunately
+BUSYBOX_CONFIG := $(BUSYBOX_DIR)/.config
 
-.PHONY: linux busybox all clean
+DESC = vmroot_desc
+
+.PHONY: all clean linux busybox
 
 objs = vmroot.img
 
 all: vmroot.img
-	$(LINUX_DIR)/usr/get
 
 
 linux_config:
@@ -20,13 +21,16 @@ linux: linux_config
 	$(MAKE) -C $(LINUX_DIR) KCONFIG_CONFIG=$(LINUX_CONFIG)
 
 
-busybox_config:
+$(BUSYBOX_CONFIG):
 	$(MAKE) -C $(BUSYBOX_DIR) defconfig
 
-busybox: busybox_config;
-	$(MAKE) -C $(BUSYBOX_DIR) KCONFIG_CONFIG=$(BUSYBOX_CONFIG)
+busybox_config: $(BUSYBOX_CONFIG)
+
+busybox:
+	$(MAKE) -C $(BUSYBOX_DIR)
 
 vmroot.img: linux busybox
+	$(LINUX_DIR)/usr/gen_init_cpio $(DESC) > $@
 
 
 clean:
